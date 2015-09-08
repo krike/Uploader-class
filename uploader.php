@@ -146,11 +146,11 @@ Class Uploader
 			return false;
 		endif;
 
-	}
+	}*/
 
 	public function openZip($file_to_open, $zip_target)
 	{
-		/*$zip = new ZipArchive();
+		$zip = new ZipArchive();
 		$x = $zip->open($file_to_open);
 		if ($x === true):
 			$zip->extractTo($zip_target);
@@ -159,5 +159,5 @@ Class Uploader
 		else:
 			return false;
 		endif;
-	}*/
+	}
 }
