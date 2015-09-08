@@ -101,7 +101,7 @@ Class Uploader
 	   return true;
 	}
 
-	function directory_copy($src,$dst) {
+	public function directory_copy($src,$dst) {
 		$dir = opendir($src);
 		@mkdir($dst);
 		while(false !== ( $file = readdir($dir)) ) {
