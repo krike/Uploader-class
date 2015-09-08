@@ -81,6 +81,26 @@ Class Uploader
 	            return false;
 		endif;
 	}
+
+	public function delete_directory($dirname) 
+	{
+	   if (is_dir($dirname))
+	      $dir_handle = opendir($dirname);
+	   if (!$dir_handle)
+	      return false;
+	   while($file = readdir($dir_handle)) {
+	      if ($file != "." && $file != "..") {
+	         if (!is_dir($dirname."/".$file))
+	            unlink($dirname."/".$file);
+	         else
+	            delete_directory($dirname.'/'.$file);    
+	      }
+	   }
+	   closedir($dir_handle);
+	   rmdir($dirname);
+	   return true;
+	}
+
 	/*
 	NOG AAN TE PASSEN
 	public function upload_batch_images($name = 'userfile', $upload_dir = 'sources/images/', $allowed_types = 'gif|jpg|jpeg|jpe|png', $size)
