@@ -48,6 +48,39 @@ Class Uploader
 		endif;
 
     }
+
+    public function d_external_img($src, $targetFolder) 
+	{
+		$error = false;
+		//create unique id, with time() it will always be unique because time is unique
+		$t = time();
+		$r = rand(000,999);
+		$filename = $t."-tutimage-".$r;
+		//get image information
+		//list($width, $height, $type, $attr) = getimagesize($src);
+		$type = substr($src, -4);
+		if($type != '.gif' && $type != '.jpg' && $type != '.png'){
+			$error = true;
+		}
+		//download the file
+		if($error == false):
+	            $path = $targetFolder.$filename.$type;
+	            if($ch = curl_init($src)):
+	                $fp = fopen($path, 'wb');
+	                curl_setopt($ch, CURLOPT_FILE, $fp);
+	                curl_setopt($ch, CURLOPT_HEADER, 0);
+		            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
+	                curl_exec($ch);
+	                curl_close($ch);
+	                fclose($fp);
+	            else:
+	                return false;
+	            endif;
+	            return $filename.$type;
+		else:
+	            return false;
+		endif;
+	}
 	/*
 	NOG AAN TE PASSEN
 	public function upload_batch_images($name = 'userfile', $upload_dir = 'sources/images/', $allowed_types = 'gif|jpg|jpeg|jpe|png', $size)
