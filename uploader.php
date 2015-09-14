@@ -4,49 +4,48 @@ Class Uploader
 {
 	public function multiple_upload($files, $upload_dir = 'images/', $allowed_types = 'gif|jpg|jpeg|jpe|png', $size)
 	{
-		if(isset($files) && !empty($files)):
-		$errors = FALSE;
-		$filename = $files['name'];
-		$rand = rand(111111111,999999999);
-		$filetmp = $files['tmp_name'];
-		$filetype = $files['type'];
-		$filesize = $files['size'];
-		$path = realpath($upload_dir)."/".$rand.$filename;
-		$allowed_types = explode("|", $allowed_types);
+		if (isset($files) && !empty($files)) {
+			$errors = FALSE;
+			$filename = $files['name'];
+			$rand = rand(111111111,999999999);
+			$filetmp = $files['tmp_name'];
+			$filetype = $files['type'];
+			$filesize = $files['size'];
+			$path = realpath($upload_dir)."/".$rand.$filename;
+			$allowed_types = explode("|", $allowed_types);
 			$allowed = false;
-			foreach($allowed_types as $types):
+			foreach ($allowed_types as $types) {
 				if($filetype == "image/".$types):
 					$allowed = true;
 				endif;
-			endforeach;
+			}
 			
 			//if the submitted file is larger then the allowed size, return false
-			if($filesize > $size):
+			if ($filesize > $size) {
 				return false;
-			endif;
+			}
 			
-			if($allowed == true):
+			if ($allowed == true) {
 				if(move_uploaded_file($filetmp,$path)):
 					return $path;
 				else:
 					return false;
 					$error = true;
 				endif;
-			else:
+			} else {
 				return false;
-			endif;
+			}
 	
-		endif;//end of if files exist and is not empty
+		}
 			
 
 		// There was errors, we have to delete the uploaded files
-		if($errors):
+		if($errors){
 			@unlink($path);
 			return false;
-		else:
+		} else {
 			return $files;
-		endif;
-
+		}
     }
 
     public function d_external_img($src, $targetFolder) 
@@ -63,23 +62,23 @@ Class Uploader
 			$error = true;
 		}
 		//download the file
-		if($error == false):
-	            $path = $targetFolder.$filename.$type;
-	            if($ch = curl_init($src)):
-	                $fp = fopen($path, 'wb');
-	                curl_setopt($ch, CURLOPT_FILE, $fp);
-	                curl_setopt($ch, CURLOPT_HEADER, 0);
-		            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
-	                curl_exec($ch);
-	                curl_close($ch);
-	                fclose($fp);
-	            else:
-	                return false;
-	            endif;
-	            return $filename.$type;
-		else:
-	            return false;
-		endif;
+		if ($error == false) {
+			$path = $targetFolder.$filename.$type;
+            if($ch = curl_init($src)) {
+            	$fp = fopen($path, 'wb');
+                curl_setopt($ch, CURLOPT_FILE, $fp);
+                curl_setopt($ch, CURLOPT_HEADER, 0);
+	            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
+                curl_exec($ch);
+                curl_close($ch);
+                fclose($fp);
+            } else {
+            	return false;
+            }
+            return $filename.$type;
+		} else {
+			return false;
+		}
 	}
 
 	public function delete_directory($dirname) 
@@ -90,10 +89,11 @@ Class Uploader
 	      return false;
 	   while($file = readdir($dir_handle)) {
 	      if ($file != "." && $file != "..") {
-	         if (!is_dir($dirname."/".$file))
-	            unlink($dirname."/".$file);
-	         else
-	            delete_directory($dirname.'/'.$file);    
+	         if (!is_dir($dirname."/".$file)) {
+	         	unlink($dirname."/".$file);
+	         } else {
+	         	delete_directory($dirname.'/'.$file);
+	         }
 	      }
 	   }
 	   closedir($dir_handle);
@@ -152,12 +152,12 @@ Class Uploader
 	{
 		$zip = new ZipArchive();
 		$x = $zip->open($file_to_open);
-		if ($x === true):
+		if ($x === true) {
 			$zip->extractTo($zip_target);
 			$zip->close();
 			return true;
-		else:
+		} else {
 			return false;
-		endif;
+		}
 	}
 }
