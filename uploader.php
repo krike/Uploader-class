@@ -117,37 +117,6 @@ Class Uploader
 		closedir($dir);
 	}
 
-	/*
-	NOG AAN TE PASSEN
-	public function upload_batch_images($name = 'userfile', $upload_dir = 'sources/images/', $allowed_types = 'gif|jpg|jpeg|jpe|png', $size)
-	{
-		/*$CI =& get_instance();
-			$realpath = $upload_dir."images-".rand(1111111111,9999999999); //let's make it unique
-			$config['upload_path']   = $realpath;
-			$config['allowed_types'] = $allowed_types;
-			$config['max_size']      = $size;
-			$config['overwrite']     = FALSE;
-			$config['encrypt_name']  = TRUE;
-
-		$CI->upload->initialize($config);
-
-		if(mkdir($realpath)):
-			if($CI->upload->do_upload($name)):
-				$files = $CI->upload->data();
-				if(openZip($realpath."/".$files['file_name'], $realpath)):
-					@unlink($files['full_path']);
-					return $realpath;
-				else:
-					@unlink($files['full_path']);
-					return false;
-				endif;
-			endif;
-		else:
-			return false;
-		endif;
-
-	}*/
-
 	public function openZip($file_to_open, $zip_target)
 	{
 		$zip = new ZipArchive();
