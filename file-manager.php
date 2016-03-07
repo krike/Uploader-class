@@ -2,10 +2,13 @@
 
 Class FileManager
 {
-	public function multiple_upload($files, $upload_dir = 'images/', $allowed_types = 'gif|jpg|jpeg|jpe|png', $size)
+	public static function multiple_upload($files, $upload_dir = 'images/', $allowed_types = 'gif|jpg|jpeg|jpe|png', $size)
 	{
+		$errors = false;
+		$path = '';
+		//@todo check if folder exists
+
 		if (isset($files) && !empty($files)) {
-			$errors = FALSE;
 			$filename = $files['name'];
 			$rand = rand(111111111,999999999);
 			$filetmp = $files['tmp_name'];
@@ -41,22 +44,28 @@ Class FileManager
 
 		// There was errors, we have to delete the uploaded files
 		if($errors){
-			@unlink($path);
+			if ($path != '') {
+				@unlink($path);
+			}
 			return false;
 		} else {
 			return $files;
 		}
     }
 
-    public function d_external_img($src, $targetFolder) 
+    public static function d_external_img($src, $targetFolder = 'images/')
 	{
 		$error = false;
-		//create unique id, with time() it will always be unique because time is unique
 		$t = time();
 		$r = rand(000,999);
-		$filename = $t."-tutimage-".$r;
-		//get image information
-		//list($width, $height, $type, $attr) = getimagesize($src);
+		$filename = $t."-image-".$r;
+
+		//@todo check if directory exists
+		if (!is_dir($targetFolder)) {
+			mkdir($targetFolder);
+		}
+
+		list($width, $height, $type, $attr) = getimagesize($src);
 		$type = substr($src, -4);
 		if($type != '.gif' && $type != '.jpg' && $type != '.png'){
 			$error = true;
@@ -83,22 +92,26 @@ Class FileManager
 
 	public function delete_directory($dirname) 
 	{
-	   if (is_dir($dirname))
-	      $dir_handle = opendir($dirname);
-	   if (!$dir_handle)
-	      return false;
-	   while($file = readdir($dir_handle)) {
-	      if ($file != "." && $file != "..") {
-	         if (!is_dir($dirname."/".$file)) {
-	         	unlink($dirname."/".$file);
-	         } else {
-	         	delete_directory($dirname.'/'.$file);
-	         }
-	      }
+	   if (is_dir($dirname)){
+		   $dir_handle = opendir($dirname);
+		   if (!$dir_handle)
+			   return false;
+		   while($file = readdir($dir_handle)) {
+			   if ($file != "." && $file != "..") {
+				   if (!is_dir($dirname."/".$file)) {
+					   unlink($dirname."/".$file);
+				   } else {
+					   self::delete_directory($dirname.'/'.$file);
+				   }
+			   }
+		   }
+		   closedir($dir_handle);
+		   rmdir($dirname);
+		   return true;
+	   } else {
+		   return false;
 	   }
-	   closedir($dir_handle);
-	   rmdir($dirname);
-	   return true;
+
 	}
 
 	public function directory_copy($src,$dst) {
@@ -107,7 +120,7 @@ Class FileManager
 		while(false !== ( $file = readdir($dir)) ) {
 			if (( $file != '.' ) && ( $file != '..' )) {
 				if ( is_dir($src . '/' . $file) ) {
-					directory_copy($src . '/' . $file,$dst . '/' . $file);
+					self::directory_copy($src . '/' . $file,$dst . '/' . $file);
 				}
 				else {
 					copy($src . '/' . $file,$dst . '/' . $file);
@@ -119,6 +132,8 @@ Class FileManager
 
 	public function openZip($file_to_open, $zip_target)
 	{
+		//@todo check if ziparchive is enabled
+
 		$zip = new ZipArchive();
 		$x = $zip->open($file_to_open);
 		if ($x === true) {
