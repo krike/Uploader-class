@@ -2,6 +2,16 @@
 
 Class FileManager
 {
+	/**
+	 * Batch upload files (to be updated)
+	 *
+	 * @param array $files
+	 * @param string $upload_dir
+	 * @param string $allowed_types
+	 * @param int $size
+	 *
+	 * @return bool
+	 */
 	public static function multiple_upload($files, $upload_dir = 'images/', $allowed_types = 'gif|jpg|jpeg|jpe|png', $size)
 	{
 		$errors = false;
@@ -38,10 +48,7 @@ Class FileManager
 			} else {
 				return false;
 			}
-	
 		}
-			
-
 		// There was errors, we have to delete the uploaded files
 		if($errors){
 			if ($path != '') {
@@ -53,6 +60,14 @@ Class FileManager
 		}
     }
 
+	/**
+	 * Download external image to specified target
+	 *
+	 * @param string $src
+	 * @param string $targetFolder
+	 *
+	 * @return bool|string
+	 */
     public static function d_external_img($src, $targetFolder = 'images/')
 	{
 		$error = false;
@@ -90,6 +105,13 @@ Class FileManager
 		}
 	}
 
+	/**
+	 * Delete a directory (Recursive)
+	 *
+	 * @param string $dirname
+	 *
+	 * @return bool
+	 */
 	public function delete_directory($dirname) 
 	{
 	   if (is_dir($dirname)){
@@ -114,6 +136,12 @@ Class FileManager
 
 	}
 
+	/**
+	 * Copy content of a directory to a new target
+	 *
+	 * @param string $src
+	 * @param string $dst
+	 */
 	public function directory_copy($src,$dst) {
 		$dir = opendir($src);
 		@mkdir($dst);
@@ -130,6 +158,14 @@ Class FileManager
 		closedir($dir);
 	}
 
+	/**
+	 * Extract a zip file to specified target
+	 *
+	 * @param string $file_to_open
+	 * @param string $zip_target
+	 *
+	 * @return bool
+	 */
 	public function openZip($file_to_open, $zip_target)
 	{
 		//@todo check if ziparchive is enabled
