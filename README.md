@@ -3,7 +3,7 @@ File Manager class
 
 A simple uploader class to upload single or multiple files.
 
-*Available Functions
+#Available Functions
 
 Upload files
 
